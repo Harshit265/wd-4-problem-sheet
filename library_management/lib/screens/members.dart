@@ -7,34 +7,51 @@ class MembersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        title: const Text('Manage Members (Users)'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Manage Members', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
       ),
       body: ListenableBuilder(
         listenable: libraryData,
         builder: (context, child) {
           if (libraryData.users.isEmpty) {
-            return const Center(child: Text('No members available.'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.people_outline, size: 80, color: Colors.grey.shade300),
+                  const SizedBox(height: 16),
+                  Text('No members registered yet.', style: TextStyle(color: Colors.grey.shade600, fontSize: 18)),
+                ],
+              ),
+            );
           }
-          return ListView.builder(
+          return ListView.separated(
+            padding: const EdgeInsets.all(24),
             itemCount: libraryData.users.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               final user = libraryData.users[index];
               return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                color: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   leading: CircleAvatar(
-                    backgroundColor: Colors.purple,
+                    radius: 28,
+                    backgroundColor: Colors.purple.shade50,
                     child: Text(
                       user.email.isNotEmpty ? user.email[0].toUpperCase() : '?',
-                      style: const TextStyle(color: Colors.white)
+                      style: TextStyle(color: Colors.purple.shade700, fontWeight: FontWeight.bold, fontSize: 24)
                     ),
                   ),
-                  title: Text(user.email, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: const Text('Registered Member'),
+                  title: Text(user.email, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  subtitle: Text('Registered Member', style: TextStyle(color: Colors.grey.shade600)),
                   trailing: IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
+                    icon: const Icon(Icons.delete_outline, color: Colors.red),
+                    tooltip: 'Remove Member',
                     onPressed: () {
                       if (libraryData.currentUser?.email == user.email) {
                         ScaffoldMessenger.of(context).showSnackBar(
