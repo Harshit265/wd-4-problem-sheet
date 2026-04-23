@@ -70,6 +70,12 @@ class LibraryData extends ChangeNotifier {
     }
   }
 
+  Future<void> deleteUser(String email) async {
+    users.removeWhere((u) => u.email == email);
+    await _saveData();
+    notifyListeners();
+  }
+
   Future<void> logout() async {
     currentUser = null;
     await _saveData();
